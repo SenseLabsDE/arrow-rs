@@ -372,9 +372,11 @@ impl MultipartUpload for S3MultiPartUpload {
 #[async_trait]
 impl MultipartStore for AmazonS3 {
     async fn create_multipart(&self, path: &Path) -> Result<MultipartId> {
-        self.client
-            .create_multipart(path, PutMultipartOpts::default())
-            .await
+        self.client.create_multipart(path, PutMultipartOpts::default()).await
+    }
+
+    async fn create_multipart_opts(&self, path: &Path, opts: PutMultipartOpts) -> Result<MultipartId> {
+        self.client.create_multipart(path, opts).await
     }
 
     async fn put_part(

@@ -24,7 +24,7 @@
 use async_trait::async_trait;
 
 use crate::path::Path;
-use crate::{MultipartId, PutPayload, PutResult, Result};
+use crate::{MultipartId, PutMultipartOpts, PutPayload, PutResult, Result};
 
 /// Represents a part of a file that has been successfully uploaded in a multipart upload process.
 #[derive(Debug, Clone)]
@@ -45,6 +45,11 @@ pub struct PartId {
 pub trait MultipartStore: Send + Sync + 'static {
     /// Creates a new multipart upload, returning the [`MultipartId`]
     async fn create_multipart(&self, path: &Path) -> Result<MultipartId>;
+
+    /// Creates a new multipart upload with the given options, returning the [`MultipartId`]
+    async fn create_multipart_opts(&self, path: &Path, opts: PutMultipartOpts) -> Result<MultipartId> {
+        self.create_multipart(path).await
+    }
 
     /// Uploads a new part with index `part_idx`
     ///
